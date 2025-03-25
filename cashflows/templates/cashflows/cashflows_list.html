@@ -1,4 +1,5 @@
 {% extends 'myapp_base/base.html' %}
+{% load humanize %}
 
 {% block content %}
 <div class="container-fluid">
@@ -31,9 +32,9 @@
                             <td>{{ cashflow.tanggal|date:"d/m/Y" }}</td>
                             <td>{{ cashflow.jam|time:"H:i" }}</td>
                             <td>{{ cashflow.uraian }}</td>
-                            <td class="text-end text-success">{{ cashflow.kas_masuk|default:0|floatformat:2 }}</td>
-                            <td class="text-end text-danger">{{ cashflow.kas_keluar|default:0|floatformat:2 }}</td>
-                            <td class="text-end fw-bold">{{ cashflow.saldo|default:0|floatformat:2 }}</td>
+                            <td class="text-end text-success">{{ cashflow.kas_masuk|default:0|floatformat:2|intcomma }}</td>
+                            <td class="text-end text-danger">{{ cashflow.kas_keluar|default:0|floatformat:2|intcomma }}</td>
+                            <td class="text-end fw-bold">{{ cashflow.saldo|default:0|floatformat:2|intcomma }}</td>
                             <td class="text-center">
                                 <a href="{% url 'cashflow_update' cashflow.pk %}" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="fas fa-edit"></i>
@@ -80,4 +81,9 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll('.format-number').forEach(el => {
+        el.textContent = parseFloat(el.textContent).toLocaleString('id-ID');
+    });
+</script>
 {% endblock %}

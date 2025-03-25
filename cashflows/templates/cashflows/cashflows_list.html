@@ -1,0 +1,83 @@
+{% extends 'myapp_base/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">
+                <i class="fas fa-money-bill-wave me-2"></i>Cashflow Management
+            </h3>
+            <a href="{% url 'cashflow_create' %}" class="btn btn-light">
+                <i class="fas fa-plus me-2"></i>Tambah Transaksi
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th width="10%">Tanggal</th>
+                            <th width="8%">Jam</th>
+                            <th>Uraian</th>
+                            <th width="12%">Kas Masuk</th>
+                            <th width="12%">Kas Keluar</th>
+                            <th width="12%">Saldo</th>
+                            <th width="10%">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cashflow in cashflows %}
+                        <tr>
+                            <td>{{ cashflow.tanggal|date:"d/m/Y" }}</td>
+                            <td>{{ cashflow.jam|time:"H:i" }}</td>
+                            <td>{{ cashflow.uraian }}</td>
+                            <td class="text-end text-success">{{ cashflow.kas_masuk|default:0|floatformat:2 }}</td>
+                            <td class="text-end text-danger">{{ cashflow.kas_keluar|default:0|floatformat:2 }}</td>
+                            <td class="text-end fw-bold">{{ cashflow.saldo|default:0|floatformat:2 }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'cashflow_update' cashflow.pk %}" class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'cashflow_delete' cashflow.pk %}" class="btn btn-sm btn-danger" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada data transaksi</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

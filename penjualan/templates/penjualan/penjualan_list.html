@@ -1,0 +1,81 @@
+{% extends 'myapp_base/base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1>Daftar Penjualan</h1>
+        <a href="{% url 'penjualan_create' %}" class="btn btn-primary mb-3">Tambah Penjualan</a>
+        <a href="{% url 'download_excel' %}" class="btn btn-success mb-3">Download Excel</a>
+        
+        <!-- Tabel Data -->
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>No. Order</th>
+                        <th>Tanggal Jual</th>
+                        <th>Item Barang</th>
+                        <th>Qty</th>
+                        <th>Harga</th>
+                        <th>Keterangan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in penjualan %}
+                    <tr>
+                        <td>{{ p.orderno }}</td>
+                        <td>{{ p.tgl_jual }}</td>
+                        <td>{{ p.item_barang }}</td>
+                        <td>{{ p.qty }}</td>
+                        <td>{{ p.harga }}</td>
+                        <td>{{ p.keterangan }}</td>
+                        <td>{{ p.status }}</td>
+                        <td>
+                            <a href="{% url 'penjualan_update' p.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'penjualan_delete' p.pk %}" class="btn btn-sm btn-danger">Hapus</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if penjualan.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ penjualan.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        Halaman {{ penjualan.number }} dari {{ penjualan.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if penjualan.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ penjualan.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ penjualan.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

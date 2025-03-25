@@ -1,0 +1,86 @@
+{% extends 'myapp_base/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">
+                <i class="fas fa-money-bill-wave me-2"></i>{{ title }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.tanggal.id_for_label }}" class="form-label">Tanggal</label>
+                        {% render_field form.tanggal class="form-control" %}
+                        <div class="invalid-feedback">
+                            Harap isi tanggal transaksi
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.jam.id_for_label }}" class="form-label">Jam</label>
+                        {% render_field form.jam class="form-control" %}
+                        <div class="invalid-feedback">
+                            Harap isi jam transaksi
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.uraian.id_for_label }}" class="form-label">Uraian</label>
+                    {% render_field form.uraian class="form-control" placeholder="Deskripsi transaksi" %}
+                    <div class="invalid-feedback">
+                        Harap isi uraian transaksi
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="{{ form.kas_masuk.id_for_label }}" class="form-label">Kas Masuk</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            {% render_field form.kas_masuk class="form-control" placeholder="0" %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.kas_keluar.id_for_label }}" class="form-label">Kas Keluar</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            {% render_field form.kas_keluar class="form-control" placeholder="0" %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between border-top pt-3">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-2"></i>Simpan
+                    </button>
+                    <a href="{% url 'cashflow_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+{% endblock %}

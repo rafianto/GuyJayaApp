@@ -1,0 +1,260 @@
+{% extends 'myapp_base/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">
+                <i class="fas fa-cash-register me-2"></i>Form Penjualan
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Nomor Order (auto-generated) -->
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Nomor Order: <strong>{{ form.orderno.value|default:"Akan digenerate otomatis" }}</strong>
+                    <input type="hidden" name="orderno" value="{{ form.orderno.value|default_if_none:'' }}">
+                </div>
+
+                <div class="row">
+                    <!-- Kolom Kiri -->
+                    <div class="col-md-6">
+                        <!-- Tanggal Jual -->
+                        <div class="mb-4">
+                            <label for="{{ form.tgl_jual.id_for_label }}" class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>Tanggal Jual
+                            </label>
+                            <div class="input-group mt-2">
+                                {{ form.tgl_jual|add_class:"form-control datepicker" }}
+                                <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
+                            </div>
+                            <div class="invalid-feedback">
+                                Harap pilih tanggal jual
+                            </div>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">
+                                <i class="fas fa-tag me-2"></i>Status
+                            </label>
+                            <div class="mt-2">
+                                {{ form.status|add_class:"form-select" }}
+                            </div>
+                            <div class="invalid-feedback">
+                                Harap pilih status
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kolom Kanan -->
+                    <div class="col-md-6">
+                        <!-- Quantity -->
+                        <div class="mb-4">
+                            <label for="{{ form.qty.id_for_label }}" class="form-label">
+                                <i class="fas fa-boxes me-2"></i>Quantity
+                            </label>
+                            <div class="input-group mt-2">
+                                {{ form.qty|add_class:"form-control" }}
+                                <span class="input-group-text">Kg</span>
+                            </div>
+                            <div class="invalid-feedback">
+                                Harap isi quantity yang valid (minimal 1)
+                            </div>
+                        </div>
+                        
+                        <!-- Harga -->
+                        <div class="mb-4">
+                            <label for="{{ form.harga.id_for_label }}" class="form-label">
+                                <i class="fas fa-money-bill-wave me-2"></i>Harga Satuan
+                            </label>
+                            <div class="input-group mt-2">
+                                <span class="input-group-text">Rp</span>
+                                {{ form.harga|add_class:"form-control price-input" }}
+                            </div>
+                            <div class="invalid-feedback">
+                                Harap isi harga yang valid
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Item Barang -->
+                <div class="mb-4">
+                    <label for="{{ form.item_barang.id_for_label }}" class="form-label">
+                        <i class="fas fa-box-open me-2"></i>Item Barang
+                    </label>
+                    <div class="mt-2">
+                        {{ form.item_barang|add_class:"form-control select2" }}
+                    </div>
+                    <div class="invalid-feedback">
+                        Harap pilih item barang
+                    </div>
+                </div>
+                
+                <!-- Keterangan -->
+                <div class="mb-4">
+                    <label for="{{ form.keterangan.id_for_label }}" class="form-label">
+                        <i class="fas fa-sticky-note me-2"></i>Keterangan (Opsional)
+                    </label>
+                    <div class="mt-2">
+                        {{ form.keterangan|add_class:"form-control"|attr:"rows=3" }}
+                    </div>
+                    <small class="text-muted">Tambahkan catatan jika diperlukan</small>
+                </div>
+                
+                <!-- Total Harga (auto-calculated) -->
+                <div class="alert alert-success mb-4" id="total-container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-calculator me-2"></i>Total Harga:</span>
+                        <strong id="total-harga">Rp0</strong>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="d-flex justify-content-between border-top pt-3">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-2"></i>Simpan Transaksi
+                    </button>
+                    <a href="{% url 'penjualan_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Include Datepicker CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- Include Datepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.id.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize Select2 for item selection
+    $('.select2').select2({
+        placeholder: "Pilih atau ketik nama barang",
+        allowClear: true
+    });
+    
+    // Initialize datepicker
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'id',
+        todayHighlight: true,
+        autoclose: true
+    });
+    
+    // Auto-format price input
+    $('.price-input').on('blur', function() {
+        let value = $(this).val().replace(/[^\d]/g, '');
+        if (value) {
+            $(this).val(formatRupiah(value));
+        }
+    }).on('focus', function() {
+        $(this).val($(this).val().replace(/[^\d]/g, ''));
+    });
+    
+    // Calculate total when qty or price changes
+    $('#{{ form.qty.id_for_label }}, #{{ form.harga.id_for_label }}').on('input', calculateTotal);
+    
+    // Function to format as Rupiah
+    function formatRupiah(angka) {
+        if (!angka) return '0';
+        let number_string = angka.toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+        
+        return rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    }
+    
+    // Function to calculate total
+    function calculateTotal() {
+        let qty = parseInt($('#{{ form.qty.id_for_label }}').val()) || 0;
+        let harga = parseInt($('#{{ form.harga.id_for_label }}').val().replace(/[^\d]/g, '')) || 0;
+        let total = qty * harga;
+        
+        if (total > 0) {
+            $('#total-harga').text('Rp' + formatRupiah(total.toString()));
+            $('#total-container').show();
+        } else {
+            $('#total-container').hide();
+        }
+    }
+    
+    // Initialize form validation
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+    
+    // Calculate total on page load if values exist
+    calculateTotal();
+});
+</script>
+
+<style>
+/* Custom styling for better appearance */
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    padding: 5px;
+    border: 1px solid #ced4da;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+}
+
+.datepicker {
+    z-index: 1151 !important; /* Make sure datepicker appears above modal */
+}
+
+/* Improve spacing */
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.form-control, .form-select, .select2-container {
+    margin-top: 0.5rem;
+}
+
+/* Make invalid feedback more noticeable */
+.invalid-feedback {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Consistent spacing between form groups */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+</style>
+{% endblock %}

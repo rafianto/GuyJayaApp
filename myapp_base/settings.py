@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'anggota',
     'penjualan',
     'cashflows',
+    'kolam',
     'myapp_base',
 ]
 

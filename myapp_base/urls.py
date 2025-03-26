@@ -1,5 +1,5 @@
-from django.urls import include, path
-from django.contrib import admin
+from django.urls import include, path # type: ignore
+from django.contrib import admin # type: ignore
 from .views import home_view
 
 from . import views

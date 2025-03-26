@@ -1,4 +1,4 @@
-from django import forms
+from django import forms # type: ignore
 from decimal import Decimal  # Add this import
 from .models import Kolam
 

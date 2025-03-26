@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render # type: ignore
+from django.shortcuts import render, redirect, get_object_or_404 # type: ignore
 from .models import Kolam
 from .forms import KolamForm
-from django.views.generic import ListView
-from django.contrib import messages
+from django.views.generic import ListView # type: ignore
+from django.contrib import messages # type: ignore
 
 class KolamListView(ListView):
     model = Kolam

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path # type: ignore
 from . import views  # Make sure this import is correct
 
 app_name = 'kolam'  # Add this in your kolam/urls.py

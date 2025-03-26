@@ -1,13 +1,9 @@
-
+from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Kolam
 from .forms import KolamForm
 from django.views.generic import ListView
 from django.contrib import messages
-
-# def kolam_list(request):
-#     kolam = Kolam.objects.all()
-#     return render(request, 'kolam/kolam_list.html', {'kolam': kolam})
 
 class KolamListView(ListView):
     model = Kolam

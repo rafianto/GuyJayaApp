@@ -17,7 +17,7 @@ def kolam_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Data kolam berhasil ditambahkan!')
-            return redirect('kolam_list')
+            return redirect('kolam:kolam_list')
     else:
         form = KolamForm()
     return render(request, 'kolam/kolam_form.html', {'form': form})
@@ -29,7 +29,7 @@ def kolam_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Data kolam berhasil diperbarui!')
-            return redirect('kolam_list')
+            return redirect('kolam:kolam_list')
     else:
         form = KolamForm(instance=kolam)
     return render(request, 'kolam/kolam_form.html', {'form': form, 'title': 'Edit Kolam'})
@@ -39,5 +39,5 @@ def kolam_delete(request, pk):
     if request.method == 'POST':
         kolam.delete()
         messages.success(request, 'Data kolam berhasil dihapus!')
-        return redirect('kolam_list')
-    return render(request, 'kolam/kolam_confirm_delete.html', {'kolam': kolam})
+        return redirect('kolam:kolam_list')
+    return render(request, 'kolam/kolam_delete.html', {'kolam': kolam})

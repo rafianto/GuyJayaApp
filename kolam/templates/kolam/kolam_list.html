@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container-fluid">
     <h2>Daftar Kolam</h2>
-    <a href="{% url 'kolam:create' %}" class="btn btn-primary mb-3">Tambah Kolam</a>
+    <a href="{% url 'kolam:kolam_create' %}" class="btn btn-primary mb-3">Tambah Kolam</a>
     
     {% if messages %}
         {% for message in messages %}
@@ -41,8 +41,8 @@
                     <td>{{ item.kapasitas|floatformat:2|intcomma }}</td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="{% url 'kolam:update' item.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="{% url 'kolam:delete' item.pk %}" class="btn btn-sm btn-danger">Hapus</a>
+                            <a href="{% url 'kolam:kolam_update' item.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'kolam:kolam_delete' item.pk %}" class="btn btn-sm btn-danger">Hapus</a>
                         </div>
                     </td>
                 </tr>

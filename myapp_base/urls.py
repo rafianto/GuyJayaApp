@@ -10,5 +10,6 @@ urlpatterns = [
     path('penjualan/', include('penjualan.urls')),
     path('cashflows/', include('cashflows.urls')),
     path('kolam/', include('kolam.urls')),
+    path('pemeliharaan/', include('pemeliharaan.urls')),
     path('', views.home_view, name='home'),
 ]

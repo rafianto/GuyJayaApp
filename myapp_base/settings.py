@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'penjualan',
     'cashflows',
     'kolam',
+    'pemeliharaan',
     'myapp_base',
 ]
 

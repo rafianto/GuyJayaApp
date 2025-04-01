@@ -1,0 +1,170 @@
+{% extends 'myapp_base/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-fish mr-2"></i>{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Kolam Selection with Description -->
+                <div class="form-group mb-4">
+                    <label for="{{ form.kolamdesc.id_for_label }}" class="form-label fw-bold">
+                        {{ form.kolamdesc.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select name="{{ form.kolamdesc.name }}" id="{{ form.kolamdesc.id_for_label }}" class="form-select" required>
+                        <option value="">Pilih Kolam...</option>
+                        {% for kolam in form.kolamdesc.field.queryset %}
+                            <option value="{{ kolam.id }}" 
+                                    {% if form.kolamdesc.value == kolam.id %}selected{% endif %}
+                                    data-deskripsi="{{ kolam.deskripsi|default:'Tidak ada deskripsi' }}">
+                                {{ kolam.nama_kolam }} - {{ kolam.deskripsi|truncatechars:50 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted mt-1 d-block" id="kolam-deskripsi">
+                        {% if form.kolamdesc.value %}
+                            Deskripsi: {{ form.kolamdesc.field.queryset.get(id=form.kolamdesc.value).deskripsi|default:"Tidak ada deskripsi" }}
+                        {% else %}
+                            Pilih kolam untuk melihat deskripsi
+                        {% endif %}
+                    </small>
+                    {% if form.kolamdesc.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.kolamdesc.errors|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Date Picker Field -->
+                <div class="form-group mb-4">
+                    <label for="{{ form.tanggal.id_for_label }}" class="form-label fw-bold">
+                        {{ form.tanggal.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {% render_field form.tanggal class="form-control datepicker" %}
+                    {% if form.tanggal.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.tanggal.errors|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Activity Description -->
+                <div class="form-group mb-4">
+                    <label for="{{ form.uraian_kegiatan.id_for_label }}" class="form-label fw-bold">
+                        {{ form.uraian_kegiatan.label }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    {% render_field form.uraian_kegiatan class="form-control" rows="4" placeholder="Masukkan detail kegiatan pemeliharaan..." %}
+                    {% if form.uraian_kegiatan.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.uraian_kegiatan.errors|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Value Field -->
+                <div class="form-group mb-4">
+                    <label for="{{ form.nilai_value.id_for_label }}" class="form-label fw-bold">
+                        {{ form.nilai_value.label }}
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        {% render_field form.nilai_value class="form-control" placeholder="Masukkan nominal (opsional)" %}
+                    </div>
+                    {% if form.nilai_value.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.nilai_value.errors|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'pemeliharaan:list' %}" class="btn btn-lg btn-outline-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-lg btn-primary">
+                        <i class="fas fa-save mr-2"></i> Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Date Picker CSS & JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+
+<style>
+    .card {
+        border-radius: 12px;
+        border: none;
+    }
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1rem 1.5rem;
+    }
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #ced4da;
+        font-size: 1rem;
+    }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        border-color: #86b7fe;
+    }
+    .btn {
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 1rem;
+    }
+    .input-group-text {
+        background-color: #f8f9fa;
+        font-size: 1rem;
+    }
+    label {
+        margin-bottom: 0.5rem;
+    }
+    #kolam-deskripsi {
+        background-color: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 6px;
+        margin-top: 8px;
+    }
+</style>
+
+<script>
+    // Initialize date picker
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            locale: "id",
+            defaultDate: "today",
+            maxDate: "today"
+        });
+
+        // Show kolam description when selected
+        const kolamSelect = document.getElementById('{{ form.kolamdesc.id_for_label }}');
+        const deskripsiElement = document.getElementById('kolam-deskripsi');
+        
+        kolamSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                deskripsiElement.textContent = "Deskripsi: " + selectedOption.getAttribute('data-deskripsi');
+            } else {
+                deskripsiElement.textContent = "Pilih kolam untuk melihat deskripsi";
+            }
+        });
+    });
+</script>
+{% endblock %}

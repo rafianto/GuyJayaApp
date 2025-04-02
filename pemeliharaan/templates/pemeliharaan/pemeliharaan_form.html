@@ -28,11 +28,7 @@
                         {% endfor %}
                     </select>
                     <small class="text-muted mt-1 d-block" id="kolam-deskripsi">
-                        {% if form.kolamdesc.value %}
-                            Deskripsi: {{ form.kolamdesc.field.queryset.get(id=form.kolamdesc.value).deskripsi|default:"Tidak ada deskripsi" }}
-                        {% else %}
-                            Pilih kolam untuk melihat deskripsi
-                        {% endif %}
+                        Pilih kolam untuk melihat deskripsi
                     </small>
                     {% if form.kolamdesc.errors %}
                         <div class="invalid-feedback d-block">

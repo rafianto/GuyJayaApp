@@ -9,8 +9,8 @@
         </a>
     </div>
     <div class="card-body">
-        <table class="table table-striped">
-            <thead>
+        <table class="table table-hover table-striped">
+            <thead class="thead-dark"
                 <tr>
                     <th>Tanggal</th>
                     <th>Kolam</th>
@@ -27,10 +27,10 @@
                     <td>{{ item.uraian_kegiatan|truncatechars:50 }}</td>
                     <td>{{ item.nilai_value|default_if_none:"-" }}</td>
                     <td>
-                        <a href="{% url 'pemeliharaankolam:update' item.pk %}" class="btn btn-sm btn-warning">
+                        <a href="{% url 'pemeliharaan:update' item.pk %}" class="btn btn-sm btn-warning">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'pemeliharaankolam:delete' item.pk %}" class="btn btn-sm btn-danger">
+                        <a href="{% url 'pemeliharaan:delete' item.pk %}" class="btn btn-sm btn-danger">
                             <i class="fas fa-trash"></i>
                         </a>
                     </td>

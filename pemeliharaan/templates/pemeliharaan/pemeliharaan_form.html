@@ -20,13 +20,13 @@
                     <select name="{{ form.kolamdesc.name }}" id="{{ form.kolamdesc.id_for_label }}" class="form-select" required>
                         <option value="">Pilih Kolam...</option>
                         {% for kolam in form.kolamdesc.field.queryset %}
-                            <option value="{{ kolam.id }}" 
-                                    {% if form.kolamdesc.value == kolam.id %}selected{% endif %}
-                                    data-deskripsi="{{ kolam.deskripsi|default:'Tidak ada deskripsi' }}">
-                                {{ kolam.nama_kolam }} - {{ kolam.deskripsi|truncatechars:50 }}
-                            </option>
+                        <option value="{{ kolam.id }}" 
+                                {% if form.kolamdesc.value|stringformat:"s" == kolam.id|stringformat:"s" %}selected{% endif %}
+                                data-deskripsi="{{ kolam.deskripsi|default:'Tidak ada deskripsi' }}"
+                                title="{{ kolam.deskripsi|default:'Tidak ada deskripsi' }}">
+                            Kolam {{ kolam.id|stringformat:"02d" }} - {{  kolam.id|stringformat:"02d"  }}
+                        </option>
                         {% endfor %}
-                    </select>
                     <small class="text-muted mt-1 d-block" id="kolam-deskripsi">
                         Pilih kolam untuk melihat deskripsi
                     </small>

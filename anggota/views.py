@@ -20,8 +20,8 @@ def anggota_update(request, id):
     return render(request, 'anggota/anggota_update.html', {'form': form})
 
 def anggota_list(request):
-    anggota_list = Anggota.objects.all()
-    paginator = Paginator(anggota_list, 10)  # 10 data per halaman
+    anggota_list = Anggota.objects.all().order_by('nama')  # Explicit ordering
+    paginator = Paginator(anggota_list, 10)
     page_number = request.GET.get('page')
     anggota = paginator.get_page(page_number)
     return render(request, 'anggota/anggota_list.html', {'anggota': anggota})

@@ -7,6 +7,7 @@ from django.contrib import messages # type: ignore
 
 class KolamListView(ListView):
     model = Kolam
+    queryset = Kolam.objects.all().order_by('kolam_desc')
     template_name = 'kolam/kolam_list.html'
     context_object_name = 'kolam'
     paginate_by = 10

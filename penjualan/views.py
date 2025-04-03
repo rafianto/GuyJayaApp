@@ -9,7 +9,7 @@ from .forms import PenjualanForm
 # List Penjualan
 def penjualan_list(request):
     # Ambil semua data penjualan
-    penjualan_list = Penjualan.objects.all()
+    penjualan_list = Penjualan.objects.all().order_by('orderno') 
     # Pagination: 10 data per halaman
     paginator = Paginator(penjualan_list, 10)
     page_number = request.GET.get('page')  # Ambil nomor halaman dari parameter URL

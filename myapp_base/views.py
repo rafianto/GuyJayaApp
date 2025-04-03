@@ -7,3 +7,4 @@ def home_view(request):
         'message': 'Selamat datang di aplikasi kami'
     }
     return render(request, 'myapp_base/contents.html', context)
+

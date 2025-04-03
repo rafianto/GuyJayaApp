@@ -11,5 +11,7 @@ urlpatterns = [
     path('cashflows/', include('cashflows.urls')),
     path('kolam/', include('kolam.urls')),
     path('pemeliharaan/', include('pemeliharaan.urls')),
+    path('sensor/', include('iot_sensor.urls')),
+    path('api/iot/', include('iot_sensor.urls')),
     path('', views.home_view, name='home'),
 ]

@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'django.contrib.humanize',
+    'rest_framework',
     'anggota',
     'penjualan',
     'cashflows',
     'kolam',
     'pemeliharaan',
+    'iot_sensor',
     'myapp_base',
 ]
 

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import download_excel 
+from .views import sales_dashboard
 
 urlpatterns = [
     path('', views.penjualan_list, name='penjualan_list'),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/update/', views.penjualan_update, name='penjualan_update'),
     path('<int:pk>/delete/', views.penjualan_delete, name='penjualan_delete'),
     path('download-excel/', views.download_excel, name='download_excel'),
+    path('dashboard/', sales_dashboard, name='penjualan_dashboard'),
 ]

@@ -7,4 +7,5 @@ urlpatterns = [
     # API Endpoints (DRF Views)
     path('api/sensor/', views.IotSensorListCreateView.as_view(), name='iot-sensor-list'),
     path('api/sensor/<int:pk>/', views.IotSensorDetailView.as_view(), name='iot-sensor-detail'),
+    path('api/iot/sensor/', views.SensorListView.as_view(), name='sensor-api'),
 ]

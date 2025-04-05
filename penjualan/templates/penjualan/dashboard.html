@@ -1,0 +1,185 @@
+<!-- templates/penjualan/dashboard.html -->
+{% extends 'myapp_base/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mb-4">Dashboard Penjualan</h1>
+    
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Penjualan Bulan Ini</h5>
+                    <h2 class="card-text">Rp{{ monthly_summary.total_sales|default:0|intcomma }}</h2>
+                    <p class="card-text">{{ monthly_summary.transaction_count|default:0 }} transaksi</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Kuantitas</h5>
+                    <h2 class="card-text">{{ monthly_summary.total_quantity|default:0|intcomma }}</h2>
+                    <p class="card-text">item terjual bulan ini</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Status Penjualan</h5>
+                    <div class="d-flex justify-content-between">
+                        {% for status in status_summary %}
+                        <div>
+                            <h6>{{ status.status|title }}</h6>
+                            <p>{{ status.count }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Monthly Sales Chart -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Trend Penjualan 12 Bulan Terakhir</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlySalesChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Distribution Chart -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Distribusi Status</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Selling Items -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Produk Terlaris</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Total Penjualan</th>
+                                    <th>Kuantitas</th>
+                                    <th>Rata-rata Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in top_items %}
+                                <tr>
+                                    <td>{{ item.item_barang }}</td>
+                                    <td>Rp{{ item.total_sales|intcomma }}</td>
+                                    <td>{{ item.total_quantity|intcomma }}</td>
+                                    <td>Rp{{ item.avg_price|intcomma }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Monthly Sales Chart
+const monthlyCtx = document.getElementById('monthlySalesChart').getContext('2d');
+const monthlyChart = new Chart(monthlyCtx, {
+    type: 'line',
+    data: {
+        labels: [{% for month in monthly_data %}"{{ month.month|date:'M Y' }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Total Penjualan',
+            data: [{% for month in monthly_data %}{{ month.total|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return 'Rp' + value.toLocaleString();
+                    }
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return 'Rp' + context.raw.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Status Distribution Chart
+const statusCtx = document.getElementById('statusChart').getContext('2d');
+const statusChart = new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for status in status_summary %}'{{ status.status|title }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            data: [{% for status in status_summary %}{{ status.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.raw + ' transaksi';
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

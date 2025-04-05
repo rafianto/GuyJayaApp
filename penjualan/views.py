@@ -3,8 +3,19 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from .models import Penjualan
 import pandas as pd
+from datetime import date
 
 from .forms import PenjualanForm
+
+def sales_dashboard(request):
+    today = date.today()
+    context = {
+        'monthly_summary': Penjualan.sales_summary_this_month(),
+        'status_summary': Penjualan.sales_by_status(),
+        'monthly_data': Penjualan.monthly_sales_data(),
+        'top_items': Penjualan.top_selling_items(),
+    }
+    return render(request, 'penjualan/dashboard.html', context)
 
 # List Penjualan
 def penjualan_list(request):

@@ -17,6 +17,12 @@ class PemeliharaanKolamForm(forms.ModelForm):
             'uraian_kegiatan': 'Deskripsi Kegiatan',
             'nilai_value': 'Biaya Pemeliharaan'
         }
+def pemeliharaan_list(request):
+    pemeliharaan_list = Pemeliharaan.objects.all().order_by('-tanggal')
+    paginator = Paginator(pemeliharaan_list, 10)  # Show 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'pemeliharaan/list.html', {'pemeliharaan_list': page_obj})
 
 class PemeliharaanListView(ListView):
     model = PemeliharaanKolam

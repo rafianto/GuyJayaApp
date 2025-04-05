@@ -5,6 +5,13 @@ from .forms import KolamForm
 from django.views.generic import ListView # type: ignore
 from django.contrib import messages # type: ignore
 
+def kolam_list(request):
+    kolam_list = Kolam.objects.all().order_by('id')
+    paginator = Paginator(kolam_list, 10)  # Show 10 items per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'kolam/kolam_list.html', {'object_list': page_obj})
+
 class KolamListView(ListView):
     model = Kolam
     queryset = Kolam.objects.all().order_by('kolam_desc')

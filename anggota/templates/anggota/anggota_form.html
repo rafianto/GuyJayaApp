@@ -1,81 +1,121 @@
 {% extends 'myapp_base/base.html' %}
 
 {% block content %}
-    <div class="container-fluid">
-        <h1 class="mb-4">{{ title }}</h1>
-        <h1 class="mb-4">Tambah Anggota</h1>
-        {% load widget_tweaks %}
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h1 class="mb-0">{{ title }}</h1>
+        </div>
+        <div class="card-body">
+            {% load widget_tweaks %}
 
-        <form method="post" novalidate class="small-form">
-            {% csrf_token %}
-            <div class="mb-4">
-                {% for field in form %}
-                    <div class="mb-4">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        <!-- Custom Placeholder --> 
-                        {% if field.name == 'nik' %}
-                            {{ field|add_class:"form-control nik-field"|attr:"maxlength:16"|attr:"pattern:'\\d{16}'"|attr:"title:'NIK harus 16 digit angka'"|attr:"style:'font-family: monospace; letter-spacing: 2px'" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}
-
-                        <!-- Custom Placeholder -->
-                        {% if field.name == 'nama' %}
-                            {{ field|add_class:"form-control"|attr:"type:label" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}
-
-                        <!-- Custom Placeholder -->
-                        {% if field.name == 'alamat' %}
-                            {{ field|add_class:"form-control"|attr:"type:label" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}                        
-
-                        <!-- Custom Placeholder -->
-                        {% if field.name == 'tgl_lahir' %}
-                            {{ field|add_class:"form-control"|attr:"type:date" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}
-
-                        <!-- Custom Placeholder -->
-                        {% if field.name == 'tempat_lahir' %}
-                            {{ field|add_class:"form-control"|attr:"type:label" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}        
-                        
-                        {% if field.name == 'status' %}
-                            {{ field|add_class:"form-control"|attr:"type:label" }}
-                        {% else %}
-                            {{ field|add_class:"form-control"|attr:"placeholder:Masukkan "|add:field.label }}
-                        {% endif %}                             
-
-                        <!-- Error Messages -->
-                        {% if field.errors %}
-                            <div class="text-danger mt-2">
-                                {% for error in field.errors %}
-                                    <span class="small">{{ error }}</span><br>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- NIK Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.nik.id_for_label }}" class="form-label">{{ form.nik.label }}</label>
+                        {{ form.nik|add_class:"form-control"|attr:"maxlength:16"|attr:"pattern:'\\d{16}'"|attr:"title:'NIK harus 16 digit angka'"|attr:"placeholder:Masukkan NIK" }}
+                        {% if form.nik.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.nik.errors %}
+                                    {{ error }}<br>
                                 {% endfor %}
                             </div>
                         {% endif %}
+                    </div>
+                </div>
 
-                        <!-- Help Text -->
-                        {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                <!-- Nama Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.nama.id_for_label }}" class="form-label">{{ form.nama.label }}</label>
+                        {{ form.nama|add_class:"form-control"|attr:"placeholder:Masukkan Nama Lengkap" }}
+                        {% if form.nama.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.nama.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
-                {% endfor %}
-            </div>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Simpan
-            </button>
-        </form>
-    </div>
+                </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+                <!-- Tempat Lahir Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.tempat_lahir.id_for_label }}" class="form-label">{{ form.tempat_lahir.label }}</label>
+                        {{ form.tempat_lahir|add_class:"form-control"|attr:"placeholder:Masukkan Tempat Lahir" }}
+                        {% if form.tempat_lahir.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.tempat_lahir.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tanggal Lahir Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.tgl_lahir.id_for_label }}" class="form-label">{{ form.tgl_lahir.label }}</label>
+                        {{ form.tgl_lahir|add_class:"form-control"|attr:"type:date" }}
+                        {% if form.tgl_lahir.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.tgl_lahir.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Alamat Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.alamat.id_for_label }}" class="form-label">{{ form.alamat.label }}</label>
+                        {{ form.alamat|add_class:"form-control"|attr:"placeholder:Masukkan Alamat Lengkap"|attr:"rows:3" }}
+                        {% if form.alamat.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.alamat.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Status Field -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">{{ form.status.label }}</label>
+                        {{ form.status|add_class:"form-select" }}
+                        {% if form.status.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.status.errors %}
+                                    {{ error }}<br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'anggota_list' %}" class="btn btn-secondary me-md-2">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 {% endblock %}

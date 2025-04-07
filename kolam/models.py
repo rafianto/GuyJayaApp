@@ -7,7 +7,11 @@ class Kolam(models.Model):
     bahan = models.CharField(max_length=50)
     diameter = models.DecimalField(max_digits=10, decimal_places=2)
     tinggi = models.DecimalField(max_digits=10, decimal_places=2)
-    kapasitas = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
+    kapasitas = models.IntegerField() 
+    #kapasitas = models.DecimalField(max_digits=15, decimal_places=2, editable=False)
+    tinggi = models.DecimalField(max_digits=5, decimal_places=2)  # dalam meter
+    diameter = models.DecimalField(max_digits=5, decimal_places=2)  # dalam meter
+    kapasitas = models.DecimalField(max_digits=8, decimal_places=2, blank=True) 
     
 def save(self, *args, **kwargs):
     # Validasi input
@@ -28,6 +32,10 @@ def save(self, *args, **kwargs):
     # Simpan kedua nilai jika diperlukan
     self.volume_m3 = volume_m3.quantize(Decimal('0.000000'))
     self.kapasitas = volume_liter.quantize(Decimal('0.000'))
+
+    if not self.kapasitas:  # Hitung jika kapasitas kosong
+         jari_jari = self.diameter / 2
+         self.kapasitas = 3.1416 * (jari_jari ** 2) * self.tinggi
     
     super().save(*args, **kwargs)
 

@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'cashflows',
     'kolam',
     'pemeliharaan',
-    'iot_sensor',
+    #'iot_sensor',  # Remove this line if you have both
+    'iot_sensor.apps.IotSensorConfig',
     'myapp_base',
 ]
 

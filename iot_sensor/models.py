@@ -1,29 +1,35 @@
+
 from django.db import models
 from kolam.models import Kolam
 
 class IotSensor(models.Model):
-    kolamdesc = models.ForeignKey(
-        Kolam,
-        on_delete=models.CASCADE,
-        verbose_name="Kolam",
-        related_name='sensor_data'
-    )
-    timestamp = models.DateTimeField("Waktu Pencatatan", auto_now_add=True)
-    suhu = models.DecimalField("Suhu Air (°C)", max_digits=5, decimal_places=2)
-    kelembaban = models.DecimalField("Kelembaban (%)", max_digits=5, decimal_places=2)
-    ketinggian_air = models.DecimalField("Ketinggian Air (cm)", max_digits=5, decimal_places=2)
-    ph_air = models.DecimalField("pH Air", max_digits=3, decimal_places=1)
-    kualitas_air = models.CharField("Kualitas Air", max_length=20, choices=[
+    # Simplified choices as tuples
+    AIR_QUALITY_CHOICES = (
         ('baik', 'Baik'),
         ('sedang', 'Sedang'),
         ('buruk', 'Buruk'),
-    ])
-    catatan = models.TextField("Catatan Tambahan", blank=True, null=True)
+    )
+
+    kolam = models.ForeignKey(
+        Kolam,
+        on_delete=models.CASCADE,
+        related_name='sensors'
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)
+    temperature = models.DecimalField(max_digits=5, decimal_places=2)  # °C
+    humidity = models.DecimalField(max_digits=5, decimal_places=2)     # %
+    water_level = models.DecimalField(max_digits=5, decimal_places=2)  # cm
+    ph_level = models.DecimalField(max_digits=3, decimal_places=1)    # pH
+    water_quality = models.CharField(
+        max_length=6,
+        choices=AIR_QUALITY_CHOICES
+    )
+    notes = models.TextField(blank=True, null=True)
 
     class Meta:
-        verbose_name = "Data Sensor IoT"
-        verbose_name_plural = "Data Sensor IoT"
         ordering = ['-timestamp']
+        verbose_name = "IoT Sensor Data"
+        verbose_name_plural = "IoT Sensor Data"
 
     def __str__(self):
-        return f"{self.timestamp} - {self.kolamdesc.nama_kolam}"
+        return f"Sensor data for {self.kolam.nama_kolam} at {self.timestamp}"

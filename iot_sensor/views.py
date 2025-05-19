@@ -19,5 +19,9 @@ class IotSensorDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = IotSensor.objects.all()
     serializer_class = IotSensorSerializer
 
+class SensorListView(generics.ListCreateAPIView):
+    queryset = IotSensor.objects.all()
+    serializer_class = IotSensorSerializer
+
 
   

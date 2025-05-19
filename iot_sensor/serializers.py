@@ -6,3 +6,4 @@ class IotSensorSerializer(serializers.ModelSerializer):
         model = IotSensor
         fields = '__all__'
         read_only_fields = ('timestamp',)
+
